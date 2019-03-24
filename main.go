@@ -7,6 +7,7 @@ import (
 	"bufio"
 	"regexp"
 	."./get_url"
+	"time"
 )
 
 
@@ -86,13 +87,15 @@ func read_text(){
 
 
 func main(){
-	err := exec.Command("sh","./line.sh").Run()
+	c := time.Tick(60 * time.Second)
 
-	if err != nil{
-		fmt.Println("Command Exec Error.")
+	for range c{
+		err := exec.Command("sh","./line.sh").Run()
+
+		if err != nil{
+			fmt.Println("Command Exec Error.")
+		}
+
+		read_text()
 	}
-
-	//time.ticker golangを使って繰り返し処理をする
-
-	read_text()
 }

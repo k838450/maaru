@@ -1,8 +1,3 @@
-/*
-  get redirect url using http.Client in Go
-  
-*/
-
 package get_url
 
 import (
@@ -32,16 +27,8 @@ func GetUrl(short_url string) string{
 
 	if urlError, ok := err.(*url.Error); ok && urlError.Err == RedirectAttemptedError {
         p_url = strings.Join(resp.Header["Location"],"")
-		//fmt.Println(resp.Header["Location"])
 		fmt.Println(p_url)
-        //fmt.Println(strings.Trim(string[url],"[]"))
     }
-
-	//err := exec.Command("youtube-dl",url).Run
-
-	//if err != nil{
-		//fmt.Println("Youtube Dl Error")
-	//}
 
 	return p_url
 }
