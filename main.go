@@ -6,7 +6,9 @@ import (
 	"os"
 	"bufio"
 	"regexp"
+	."./get_url"
 )
+
 
 func read_text(){
 	filename := "tmp.txt"
@@ -18,13 +20,12 @@ func read_text(){
 
 	defer fp.Close()
 
-	//r := regexp.MustCompile("ちょる")
 	//ツイートの先頭かどうかの確認
 	r2 := regexp.MustCompile("1107")
 	//ツイートのユーザー名の確認
-	g_name := regexp.MustCompile("s-now")
-	c_you := regexp.MustCompile("youtube.com")
-	youtube := regexp.MustCompile(".+(youtube.+)")
+	g_name := regexp.MustCompile("清楚系媚媚Vtuber")
+	c_you := regexp.MustCompile("https")
+	youtube := regexp.MustCompile("(https.+)()(https.+)")
 
 	//現在の状態を確認するための数字
 	c_num := 0
@@ -40,7 +41,7 @@ func read_text(){
 				//[]内の文字に指定していないのでミスる可能性あり)
 				check_name := g_name.MatchString(scanner.Text())
 				if check_name == true{
-					fmt.Println(scanner.Text())
+					//fmt.Println(scanner.Text())
 					//ツイート取得中
 					c_num = 1
 				}
@@ -57,7 +58,19 @@ func read_text(){
 					//group := youtube.FindSubmatch(scanner.Text())
 					group := youtube.FindSubmatch(string_byte)
 					youtube_url := string(group[1])
-					fmt.Println(youtube_url)
+					short_url := "'"
+					short_url += youtube_url
+					short_url += "'"
+					fmt.Println(short_url)
+
+					url := GetUrl(short_url)
+					fmt.Println(url)
+
+					err := exec.Command("youtube-dl","--hls-use-mpegts",url).Run()
+
+					if err != nil{
+						fmt.Println("Youtube Dl Error")
+					}
 				}
 				//fmt.Println(scanner.Text())
 			} else {
@@ -78,6 +91,8 @@ func main(){
 	if err != nil{
 		fmt.Println("Command Exec Error.")
 	}
+
+	//time.ticker golangを使って繰り返し処理をする
 
 	read_text()
 }
